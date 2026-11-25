@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNIT K1-B0 // Interactive Cyberpunk Mecha Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <!-- Top-Left Identity & Live Telemetry Header -->
+    <header class="hud-header">
+      <div class="brand-badge">
+        <span class="status-dot"></span>
+        <div>
+          <h1>UNIT K1-B0 <span class="sub-tag">// MK-IV CHIBI SPEC</span></h1>
+          <p class="telemetry-line">
+            <span id="hud-state">MODE: IDLE_TRACK</span>
+            <span class="sep">|</span>
+            <span id="hud-ik">IK: 4-LIMB ACTIVE</span>
+            <span class="sep">|</span>
+            <span id="hud-fps">60 FPS</span>
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Bottom Interaction Hint Pill -->
+    <div class="hud-hints" id="hud-hints">
+      <span><b>MOVE CURSOR</b> Track Gaze</span>
+      <span class="dot">•</span>
+      <span><b>CLICK HEAD / CORE</b> Boop &amp; Surge</span>
+      <span class="dot">•</span>
+      <span><b>CLICK FLOOR</b> Step Pulse</span>
+      <span class="dot">•</span>
+      <span><b>DRAG / SCROLL</b> Orbit &amp; Zoom</span>
+    </div>
+
+    <!-- Collapsible Right Control Deck -->
+    <aside class="control-panel" id="control-panel">
+      <div class="panel-header">
+        <span class="panel-title">CYBERNETICS DECK</span>
+        <button id="toggle-panel-btn" class="icon-btn" title="Collapse / Expand Deck" aria-label="Toggle Panel">
+          ▾
+        </button>
+      </div>
+
+      <div class="panel-body" id="panel-body">
+        <!-- Behavior / IK Mode -->
+        <section class="control-group">
+          <label class="group-label">KINEMATIC ROUTINE</label>
+          <div class="btn-grid">
+            <button class="chip-btn active" data-mode="idle">Idle + Track</button>
+            <button class="chip-btn" data-mode="walk">IK Strut</button>
+            <button class="chip-btn" data-mode="dance">Cyber Groove</button>
+            <button class="chip-btn" data-mode="wave">Wave Hi!</button>
+            <button class="chip-btn" data-mode="reach">IK Orb Reach</button>
+            <button class="chip-btn" data-mode="hover">Overdrive</button>
+          </div>
+        </section>
+
+        <!-- Visor Expression -->
+        <section class="control-group">
+          <label class="group-label">OPTIC EXPRESSION</label>
+          <div class="btn-grid cols-3">
+            <button class="chip-btn active" data-expr="auto">Auto</button>
+            <button class="chip-btn" data-expr="happy">^ ‿ ^</button>
+            <button class="chip-btn" data-expr="love">♥ ‿ ♥</button>
+            <button class="chip-btn" data-expr="curious">◔ _ ◔</button>
+            <button class="chip-btn" data-expr="focused">&gt; _ &lt;</button>
+            <button class="chip-btn" data-expr="glitch">GLITCH</button>
+          </div>
+        </section>
+
+        <!-- Chassis Finish / Neon Palette -->
+        <section class="control-group">
+          <label class="group-label">CHASSIS &amp; NEON SPEC</label>
+          <div class="swatch-row">
+            <button class="swatch-btn active" data-theme="cyber" title="Night City Cyan & Magenta">
+              <span style="background: linear-gradient(135deg, #00f5ff 50%, #ff2a85 50%)"></span>
+              Cyber
+            </button>
+            <button class="swatch-btn" data-theme="crimson" title="Arasaka Stealth Crimson">
+              <span style="background: linear-gradient(135deg, #ff2a4b 50%, #ff9900 50%)"></span>
+              Ronin
+            </button>
+            <button class="swatch-btn" data-theme="gold" title="Solaris Tactical Gold">
+              <span style="background: linear-gradient(135deg, #ffd000 50%, #00ff9d 50%)"></span>
+              Solar
+            </button>
+            <button class="swatch-btn" data-theme="mint" title="Porcelain Mint & Violet">
+              <span style="background: linear-gradient(135deg, #3dffb5 50%, #a855f7 50%)"></span>
+              Holo
+            </button>
+          </div>
+        </section>
+
+        <!-- Camera Presets -->
+        <section class="control-group">
+          <label class="group-label">CAMERA RIG</label>
+          <div class="btn-grid cols-4">
+            <button class="chip-btn active" data-cam="hero">Hero</button>
+            <button class="chip-btn" data-cam="closeup">Face</button>
+            <button class="chip-btn" data-cam="joints">Joints</button>
+            <button class="chip-btn" data-cam="low">Low</button>
+          </div>
+        </section>
+
+        <!-- Post-Processing & Diagnostics -->
+        <section class="control-group">
+          <label class="group-label">OPTICS &amp; DIAGNOSTICS</label>
+
+          <div class="slider-row">
+            <span>Bloom Glow</span>
+            <input type="range" id="bloom-slider" min="0" max="1.4" step="0.02" value="0.46" />
+            <span id="bloom-val" class="val-readout">0.46</span>
+          </div>
+
+          <div class="slider-row">
+            <span>Circuit Pulse</span>
+            <input type="range" id="pulse-slider" min="0" max="3.0" step="0.05" value="1.2" />
+            <span id="pulse-val" class="val-readout">1.2x</span>
+          </div>
+
+          <div class="toggle-row">
+            <label class="switch-label">
+              <input type="checkbox" id="cursor-track-toggle" checked />
+              <span>Cursor Gaze &amp; Tilt</span>
+            </label>
+            <label class="switch-label">
+              <input type="checkbox" id="ik-debug-toggle" />
+              <span>Show IK Gizmos</span>
+            </label>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
